@@ -9,6 +9,7 @@ import { LEFT_SVG } from "../assets/left.svg";
 import { METAMASK_SVG } from "../assets/metamask.svg";
 import { OKX_SVG } from "../assets/okx.svg";
 import { UNI_SAT_SVG } from "../assets/uni-sat.svg";
+import { UTXO_GLOBAL_SVG } from "../assets/utxo-gloabal.svg";
 import { ClosedEvent, WillUpdateEvent } from "../events";
 import {
   generateConnectingScene,
@@ -218,6 +219,11 @@ export class WebComponentConnector extends LitElement {
       this.addSigner("Nostr", "Nostr", NOSTR_SVG, nip07Signer);
     }
 
+    const utxoGlobalSigner = ccc.UtxoGlobal.getUtxoGlobalSigner(this.client);
+    if (utxoGlobalSigner) {
+      this.addSigner("UTXO Global Wallet", "BTC", UTXO_GLOBAL_SVG, utxoGlobalSigner);
+    }
+
     const eip6963Manager = new ccc.Eip6963.SignerFactory(this.client);
     this.resetListeners.push(
       eip6963Manager.subscribeSigners((signer) => {
@@ -250,10 +256,10 @@ export class WebComponentConnector extends LitElement {
           this.client,
           type,
           "https://www.okx.com/download?deeplink=" +
-            encodeURIComponent(
-              "okx://wallet/dapp/url?dappUrl=" +
-                encodeURIComponent(window.location.href),
-            ),
+          encodeURIComponent(
+            "okx://wallet/dapp/url?dappUrl=" +
+            encodeURIComponent(window.location.href),
+          ),
         ),
       );
     });
@@ -267,6 +273,18 @@ export class WebComponentConnector extends LitElement {
         "https://unisat.io/download",
       ),
     );
+
+    this.addSigner(
+      "UTXO Global Wallet",
+      ccc.SignerType.BTC,
+      UTXO_GLOBAL_SVG,
+      new ccc.SignerOpenLink(
+        this.client,
+        ccc.SignerType.BTC,
+        "",
+      ),
+    );
+
     // ===
   }
 
@@ -377,26 +395,26 @@ export class WebComponentConnector extends LitElement {
       <div class="main" ${ref(this.mainRef)}>
         <div
           class="header text-bold fs-lg ${title == null
-            ? ""
-            : "header-divider"}"
+        ? ""
+        : "header-divider"}"
           ${ref(this.headerRef)}
         >
           <img
             class="back ${canBack ? "active" : ""}"
             src=${LEFT_SVG}
             @click=${() => {
-              if (this.scene === Scene.Connecting) {
-                if ((this.selectedWallet?.signers.length ?? 0) <= 1) {
-                  this.scene = Scene.SelectingWallets;
-                } else {
-                  this.scene = Scene.SelectingSigners;
-                }
-              } else if (this.scene === Scene.SelectingSigners) {
-                this.scene = Scene.SelectingWallets;
-              } else if (this.scene === Scene.SwitchingNetworks) {
-                this.scene = Scene.Connected;
-              }
-            }}
+        if (this.scene === Scene.Connecting) {
+          if ((this.selectedWallet?.signers.length ?? 0) <= 1) {
+            this.scene = Scene.SelectingWallets;
+          } else {
+            this.scene = Scene.SelectingSigners;
+          }
+        } else if (this.scene === Scene.SelectingSigners) {
+          this.scene = Scene.SelectingWallets;
+        } else if (this.scene === Scene.SwitchingNetworks) {
+          this.scene = Scene.Connected;
+        }
+      }}
           />
           ${title}
           <img
@@ -414,10 +432,9 @@ export class WebComponentConnector extends LitElement {
     if (!this.mainRef.value) {
       return;
     }
-    this.mainRef.value.style.height = `${
-      (this.bodyRef.value?.clientHeight ?? 0) +
+    this.mainRef.value.style.height = `${(this.bodyRef.value?.clientHeight ?? 0) +
       (this.headerRef.value?.clientHeight ?? 0)
-    }px`;
+      }px`;
   }
 
   private closedHandler = () => {

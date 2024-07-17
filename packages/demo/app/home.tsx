@@ -152,6 +152,7 @@ function Transfer() {
             let txSkeleton = new TransactionSkeleton({
               cellProvider: indexer,
             });
+
             txSkeleton = await common.transfer(
               txSkeleton,
               fromAddresses,
@@ -186,7 +187,7 @@ function Transfer() {
             const dataBytes = (() => {
               try {
                 return ccc.bytesFrom(data);
-              } catch (e) {}
+              } catch (e) { }
 
               return ccc.bytesFrom(data, "utf8");
             })();

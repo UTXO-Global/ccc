@@ -1,8 +1,8 @@
 {
-  "name": "@ckb-ccc/ccc",
-  "version": "0.0.7-alpha.0",
-  "description": "Common Chains Connector",
-  "author": "Hanssen0 <hanssen0@hanssen0.com>",
+  "name": "@ckb-ccc/utxo-global",
+  "version": "0.0.5-alpha.10",
+  "description": "Common Chains Connector's support for UTXO Global",
+  "author": "Trong Dinh <trong@nexm.io>",
   "license": "MIT",
   "private": false,
   "homepage": "https://github.com/ckb-ecofund/ccc",
@@ -44,18 +44,14 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "rimraf": "^5.0.5",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.7.0"
+    "typescript-eslint": "^7.7.0",
+    "@ckb-lumos/helpers": "^0.22.2",
+    "@ckb-lumos/config-manager": "^0.22.2"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@ckb-ccc/utxo-global": "workspace:*",
-    "@ckb-ccc/core": "workspace:*",
-    "@ckb-ccc/eip6963": "workspace:*",
-    "@ckb-ccc/joy-id": "workspace:*",
-    "@ckb-ccc/nip07": "workspace:*",
-    "@ckb-ccc/okx": "workspace:*",
-    "@ckb-ccc/uni-sat": "workspace:*"
+    "@ckb-ccc/core": "workspace:*"
   }
 }
