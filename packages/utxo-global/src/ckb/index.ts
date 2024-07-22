@@ -1,9 +1,8 @@
 import { BytesLike, Script, Signature, SignerSignType, ccc } from "@ckb-ccc/core";
-import { Provider } from "./advancedBarrel";
-import { encodeToAddress } from "@ckb-lumos/helpers";
-import { predefined } from "@ckb-lumos/config-manager";
+import { Provider } from "../advancedBarrel";
 
-export class UtxoGlobalSigner extends ccc.Signer {
+export class UtxoGlobalCKBSigner extends ccc.Signer {
+
   
   get type(): ccc.SignerType {
     return ccc.SignerType.CKB;
@@ -22,11 +21,6 @@ export class UtxoGlobalSigner extends ccc.Signer {
     public readonly provider: Provider,
   ) {
     super(client);
-  }
-
-  async isCKBNetwork() {
-    const address = await this.getInternalAddress();
-    return address.startsWith("ckb") || address.startsWith("ckt");
   }
 
   getInternalAddress(): Promise<string> {
@@ -103,12 +97,8 @@ export class UtxoGlobalSigner extends ccc.Signer {
   }
 
   async verifyMessageRaw(message: ccc.BytesLike, signature: string | ccc.Signature): Promise<boolean> {
-    if (await this.isCKBNetwork()) {
-      const pubKey = await this.getPublicKey();
-      return ccc.verifyMessageUtxoGlobal(message, signature as string, pubKey.slice(2))
-    }
-    
-    return super.verifyMessage(message, signature as ccc.Signature)
+    const pubKey = await this.getPublicKey();
+    return ccc.verifyMessageUtxoGlobal(message, signature as string, pubKey.slice(2))
   }
 
   async signOnlyTransaction(
@@ -116,19 +106,6 @@ export class UtxoGlobalSigner extends ccc.Signer {
   ): Promise<ccc.Transaction> {
     // TODO: waiting utxo-wallet support sign transaction
 
-    console.log("signOnlyTransaction txLike:", txLike)
-    if (await this.isCKBNetwork()) {
-      if (txLike.outputs) {
-        const config = this.client.addressPrefix === "ckb" ? predefined.LINA : predefined.AGGRON4;
-        const toAddress = encodeToAddress(txLike.outputs[0].lock as Script, {config})
-        const toAmount = Number(txLike.outputs[0].capacity) / 10 **8;
-
-        const rawTx = await this.provider.createTx({ to: toAddress, amount: toAmount, feeRate: 14, receiverToPayFee: false })
-        const tx = JSON.parse(rawTx) as ccc.TransactionLike
-        console.log("signed", tx)
-        return ccc.Transaction.from(tx);
-      }
-    }
     return super.signOnlyTransaction(txLike)
   }
 
@@ -136,7 +113,6 @@ export class UtxoGlobalSigner extends ccc.Signer {
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
     const tx = ccc.Transaction.from(txLike);
-    console.log("prepareTransaction", tx)
     return tx;
   }
 }

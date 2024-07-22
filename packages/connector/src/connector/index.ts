@@ -219,10 +219,9 @@ export class WebComponentConnector extends LitElement {
       this.addSigner("Nostr", "Nostr", NOSTR_SVG, nip07Signer);
     }
 
-    const utxoGlobalSigner = ccc.UtxoGlobal.getUtxoGlobalSigner(this.client);
-    if (utxoGlobalSigner) {
-      this.addSigner("UTXO Global Wallet", "BTC", UTXO_GLOBAL_SVG, utxoGlobalSigner);
-    }
+    ccc.UtxoGlobal.getUtxoGlobalSigners(this.client)?.forEach(({signer, name}) => {
+      this.addSigner("UTXO Global Wallet", name, UTXO_GLOBAL_SVG, signer)
+    });
 
     const eip6963Manager = new ccc.Eip6963.SignerFactory(this.client);
     this.resetListeners.push(
@@ -263,6 +262,7 @@ export class WebComponentConnector extends LitElement {
         ),
       );
     });
+    
     this.addSigner(
       "UniSat",
       ccc.SignerType.BTC,
