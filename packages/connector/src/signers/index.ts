@@ -5,7 +5,7 @@ import { JOY_ID_SVG } from "../assets/joy-id.svg";
 import { METAMASK_SVG } from "../assets/metamask.svg";
 import { OKX_SVG } from "../assets/okx.svg";
 import { UNI_SAT_SVG } from "../assets/uni-sat.svg";
-import { UTXO_GLOBAL_SVG } from "../assets/utxo-gloabal.svg";
+import { UTXO_GLOBAL_SVG } from "../assets/utxo-global.svg";
 import { WalletWithSigners } from "../types";
 
 export class SignersController implements ReactiveController {
