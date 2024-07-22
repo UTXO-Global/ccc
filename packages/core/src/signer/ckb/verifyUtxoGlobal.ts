@@ -9,6 +9,7 @@ export function verifyMessageUtxoGlobal(
     signature: string,
     publicKey: string,
   ): boolean {
+    console.log("verifyMessageUtxoGlobal ===> ", message, signature, publicKey)
     const challenge = typeof message === "string" ? message : hexFrom(message).slice(2);
     const encoder = new TextEncoder();
     const _message = encoder.encode(challenge as string);
