@@ -7,6 +7,8 @@ import { NostrProvider } from "../advancedBarrel";
  * @extends {ccc.SignerBtc}
  */
 export class NostrSigner extends ccc.SignerNostr {
+  private publicKeyCache?: Promise<string> = undefined;
+
   constructor(
     client: ccc.Client,
     public readonly provider: NostrProvider,
@@ -15,22 +17,23 @@ export class NostrSigner extends ccc.SignerNostr {
   }
 
   async getNostrPublicKey(): Promise<ccc.Hex> {
-    if (!this.provider.selectedAccount) {
-      throw new Error("Not connected");
+    if (!this.publicKeyCache) {
+      this.publicKeyCache = this.provider.getPublicKey();
     }
-
-    return ccc.hexFrom(this.provider.selectedAccount.publicKey);
+    return ccc.hexFrom(await this.publicKeyCache);
   }
 
   async signNostrEvent(
     event: ccc.NostrEvent,
   ): Promise<Required<ccc.NostrEvent>> {
-    return this.provider.signEvent(event);
+    return this.provider.signEvent({
+      ...event,
+      pubkey: await this.publicKeyCache,
+    });
   }
 
   async connect(): Promise<void> {
-    await this.provider.getPublicKey();
-    await this.provider.connect();
+    await this.provider.connect?.(); // Help extension to switch network
   }
 
   onReplaced(listener: () => void): () => void {
@@ -49,6 +52,6 @@ export class NostrSigner extends ccc.SignerNostr {
   }
 
   async isConnected(): Promise<boolean> {
-    return this.provider.selectedAccount !== null;
+    return true;
   }
 }
