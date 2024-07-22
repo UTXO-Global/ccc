@@ -16,18 +16,12 @@ export class Signer extends ccc.SignerNostr {
     super(client);
   }
 
-  static isValidClient(client: ccc.Client): boolean {
-    return client.addressPrefix === "ckt";
-  }
-
-  async replaceClient(client: ccc.Client): Promise<boolean> {
-    if (!Signer.isValidClient(client)) {
-      return false;
-    }
-    return super.replaceClient(client);
-  }
-
   async getNostrPublicKey(): Promise<ccc.Hex> {
+    if (this.publicKey) {
+      return this.publicKey;
+    }
+
+    this.publicKey = (await this.connectionsRepo.get())?.publicKey;
     if (!this.publicKey) {
       throw new Error("Not connected");
     }
@@ -38,7 +32,7 @@ export class Signer extends ccc.SignerNostr {
   async signNostrEvent(
     event: ccc.NostrEvent,
   ): Promise<Required<ccc.NostrEvent>> {
-    return this.provider.signEvent(event);
+    return this.provider.signEvent({ ...event, pubkey: this.publicKey });
   }
 
   async connect(): Promise<void> {
@@ -47,6 +41,10 @@ export class Signer extends ccc.SignerNostr {
   }
 
   async isConnected(): Promise<boolean> {
+    if (this.publicKey) {
+      return true;
+    }
+
     this.publicKey = (await this.connectionsRepo.get())?.publicKey;
     return this.publicKey !== undefined;
   }

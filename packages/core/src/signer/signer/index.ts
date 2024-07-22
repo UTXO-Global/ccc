@@ -16,7 +16,8 @@ export enum SignerSignType {
   EvmPersonal = "EvmPersonal",
   JoyId = "JoyId",
   NostrEvent = "NostrEvent",
-  UtxoGlobalCKB = "UtxoGlobalCKB"
+  UtxoGlobalCKB = "UtxoGlobalCKB",
+  CkbSecp256k1 = "CkbSecp256k1",
 }
 
 /**
@@ -29,12 +30,29 @@ export enum SignerType {
   Nostr = "Nostr",
 }
 
+export type NetworkPreference = {
+  addressPrefix: string;
+  signerType: SignerType;
+  network: string;
+  /*
+    Wallet signers should check if the wallet is using preferred networks.
+    If not, try to switch to the first preferred network.
+    If non preferred, let users choose what they want.
+
+    BTC: // They made a mess...
+      btc
+      btcTestnet
+      btcSignet // OKX
+      fractalBtc // UniSat
+  */
+};
+
 export class Signature {
   constructor(
     public signature: string,
     public identity: string,
     public signType: SignerSignType,
-  ) {}
+  ) { }
 }
 
 /**
@@ -42,13 +60,34 @@ export class Signature {
  * This class provides methods to connect, get addresses, and sign transactions.
  */
 export abstract class Signer {
-  constructor(protected client_: Client) {}
+  constructor(protected client_: Client) { }
 
   abstract get type(): SignerType;
   abstract get signType(): SignerSignType;
 
   get client(): Client {
     return this.client_;
+  }
+
+  // Returns the preference if we need to switch network
+  // undefined otherwise
+  matchNetworkPreference(
+    preferences: NetworkPreference[],
+    currentNetwork: string,
+  ) {
+    if (
+      preferences.some(({ signerType, addressPrefix, network }) => {
+        signerType === this.type &&
+          addressPrefix === this.client.addressPrefix &&
+          network === currentNetwork;
+      })
+    ) {
+      return;
+    }
+    return preferences.find(
+      ({ signerType, addressPrefix }) =>
+        signerType === this.type && addressPrefix === this.client.addressPrefix,
+    );
   }
 
   static async verifyMessage(
@@ -86,18 +125,10 @@ export abstract class Signer {
           signature.signature,
           signature.identity,
         );
+      case SignerSignType.CkbSecp256k1:
       case SignerSignType.Unknown:
         throw new Error("Unknown signer sign type");
     }
-  }
-
-  /**
-   * Replace the current client.
-   * returns false if the new client is invalid for this signer.
-   */
-  async replaceClient(client: Client): Promise<boolean> {
-    this.client_ = client;
-    return true;
   }
 
   /**
@@ -106,6 +137,22 @@ export abstract class Signer {
    * @returns A promise that resolves when the connection is complete.
    */
   abstract connect(): Promise<void>;
+
+  /**
+   * Register a listener to be called when this signer is replaced.
+   *
+   * @returns A function for unregister
+   */
+  onReplaced(_: () => void): () => void {
+    return () => { };
+  }
+
+  /**
+   * Disconnects to the signer.
+   *
+   * @returns A promise that resolves when the signer is disconnected.
+   */
+  async disconnect(): Promise<void> { }
 
   /**
    * Check if the signer is connected.
@@ -294,7 +341,7 @@ export class SignerInfo {
   constructor(
     public name: string,
     public signer: Signer,
-  ) {}
+  ) { }
 }
 
 /**

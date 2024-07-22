@@ -3,7 +3,7 @@ import { ClientCollectableSearchKeyFilterLike } from "../advancedBarrel";
 import { Bytes, BytesLike, bytesFrom } from "../bytes";
 import { CellDepInfoLike, Client, KnownScript } from "../client";
 import { Zero, fixedPointFrom } from "../fixedPoint";
-import { Hasher, ckbHash } from "../hasher";
+import { Hasher, hashCkb } from "../hasher";
 import { Hex, HexLike, hexFrom } from "../hex";
 import {
   Num,
@@ -888,9 +888,12 @@ export class Transaction {
           ...output,
           capacity: output.capacity ?? 0,
         });
-        o.capacity = fixedPointFrom(
-          o.occupiedSize + (apply(bytesFrom, tx.outputsData?.[i])?.length ?? 0),
-        );
+        if (o.capacity === Zero) {
+          o.capacity = fixedPointFrom(
+            o.occupiedSize +
+              (apply(bytesFrom, tx.outputsData?.[i])?.length ?? 0),
+          );
+        }
         return o;
       }) ?? [];
     const outputsData = outputs.map((_, i) =>
@@ -1023,7 +1026,7 @@ export class Transaction {
    */
 
   hash() {
-    return ckbHash(this.rawToBytes());
+    return hashCkb(this.rawToBytes());
   }
 
   /**
@@ -1071,9 +1074,10 @@ export class Transaction {
     hasher.update(this.hash());
 
     for (let i = 0; i < this.witnesses.length; i += 1) {
-      const input = await this.inputs[i];
-      await input.completeExtraInfos(client);
+      const input = this.inputs[i];
       if (input) {
+        await input.completeExtraInfos(client);
+
         if (!input.cellOutput) {
           throw new Error("Unable to complete input");
         }
@@ -1600,6 +1604,16 @@ export class Transaction {
       feeRate,
       filter,
     );
+  }
+
+  async completeFeeBy(
+    from: Signer,
+    feeRate: NumLike,
+    filter?: ClientCollectableSearchKeyFilterLike,
+  ): Promise<[number, boolean]> {
+    const { script } = await from.getRecommendedAddressObj();
+
+    return this.completeFeeChangeToLock(from, script, feeRate, filter);
   }
 
   completeFeeChangeToOutput(

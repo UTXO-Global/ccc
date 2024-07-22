@@ -21,7 +21,7 @@ export class Signer extends ccc.SignerEvm {
 
   /**
    * Gets the EVM account address.
-   * @returns {Promise<string>} A promise that resolves to the EVM account address.
+   * @returns A promise that resolves to the EVM account address.
    */
   async getEvmAccount() {
     return (await this.detail.provider.request({ method: "eth_accounts" }))[0];
@@ -33,6 +33,23 @@ export class Signer extends ccc.SignerEvm {
    */
   async connect(): Promise<void> {
     await this.detail.provider.request({ method: "eth_requestAccounts" });
+  }
+
+  onReplaced(listener: () => void): () => void {
+    const stop: (() => void)[] = [];
+    const replacer = async () => {
+      listener();
+      stop[0]?.();
+    };
+    stop.push(() => {
+      this.detail.provider.removeListener("accountsChanged", replacer);
+      this.detail.provider.removeListener("disconnect", replacer);
+    });
+
+    this.detail.provider.on("accountsChanged", replacer);
+    this.detail.provider.on("disconnect", replacer);
+
+    return stop[0];
   }
 
   /**
