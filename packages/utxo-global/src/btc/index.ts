@@ -38,7 +38,7 @@ export class UtxoGlobalBTCSigner extends ccc.SignerBtc {
   async signMessage(message: ccc.BytesLike): Promise<ccc.Signature> {
     return {
       signature: await this.signMessageRaw(message),
-      identity: await this.getIdentity(),
+      identity: await this.getBtcPublicKey(),
       signType: this.signType,
     };
   }
