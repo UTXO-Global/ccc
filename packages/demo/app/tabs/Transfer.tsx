@@ -43,7 +43,7 @@ export function Transfer({ sendMessage, signer }: TabProps) {
           const dataBytes = (() => {
             try {
               return ccc.bytesFrom(data);
-            } catch (e) {}
+            } catch (e) { }
 
             return ccc.bytesFrom(data, "utf8");
           })();

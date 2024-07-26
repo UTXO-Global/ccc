@@ -1,5 +1,7 @@
 import { BytesLike, Script, Signature, SignerSignType, ccc } from "@ckb-ccc/core";
 import { Provider } from "../advancedBarrel";
+import { BI } from "@ckb-lumos/lumos";
+import { TransactionSkeleton } from "@ckb-lumos/lumos/helpers";
 
 export class UtxoGlobalCKBSigner extends ccc.Signer {
 
@@ -104,9 +106,63 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
   async signOnlyTransaction(
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
-    // TODO: waiting utxo-wallet support sign transaction
 
-    return super.signOnlyTransaction(txLike)
+    let txSkeleton = new TransactionSkeleton({});
+    const tx = ccc.Transaction.from(txLike)
+    tx.inputs?.forEach((input: any) => {
+        txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push({
+          outPoint: {
+            txHash: input.previousOutput.txHash,
+            index: this.toHexString(Number(input.previousOutput.index)),
+          },
+          data: input.outputData || "0x",
+          cellOutput: {
+            capacity: this.toHexString(Number(input.cellOutput.capacity)),
+            lock: input.cellOutput.lock,
+            type: input.cellOutput.type || null 
+          },
+
+        }));
+    });
+
+    tx.outputs?.forEach((output: any, index: number) => {
+        txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push({
+          cellOutput: {
+            capacity: this.toHexString(Number(output.capacity)),
+            lock: output.lock,
+            type: output.type || null
+          },
+          data: "0x"
+        }));
+    });
+
+    tx.cellDeps?.forEach((cellDep:any) => {
+        txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push({
+          outPoint: {
+              txHash: cellDep.outPoint.txHash,
+              index: this.toHexString(Number(cellDep.outPoint.index)),
+          },
+          depType: cellDep.depType
+      }));
+    });
+
+    tx.headerDeps?.forEach((headerDep:any) => {
+        txSkeleton = txSkeleton.update('headerDeps', (headerDeps) => headerDeps.push(headerDep));
+    });
+
+    tx.witnesses?.forEach((witness:any) => {
+        txSkeleton = txSkeleton.update('witnesses', (witnesses) => witnesses.push(witness));
+    });
+
+    const rawTx = JSON.stringify(txSkeleton, (key, value) => {
+      if (typeof value === 'bigint') {
+          return value.toString();
+      }
+      return value;
+    });
+
+    const txSigned = await this.provider.signTransaction(JSON.parse(rawTx))
+    return JSON.parse(txSigned) as ccc.Transaction;
   }
 
   async prepareTransaction(
@@ -114,5 +170,14 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
   ): Promise<ccc.Transaction> {
     const tx = ccc.Transaction.from(txLike);
     return tx;
+  }
+
+  toHexString(value: any) {
+    if (typeof value === 'number') {
+      return `0x${value.toString(16)}`;
+    } else if (typeof value === 'string') {
+      return value.startsWith('0x') ? value : `0x${value}`;
+    }
+    return value;
   }
 }

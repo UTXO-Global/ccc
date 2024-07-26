@@ -7,7 +7,13 @@ export function getUtxoGlobalSigners(
   client: ccc.Client
 ): SignerInfo[] | undefined {
   
-  const windowRef = window as { utxoGlobal?: Provider };
+  const windowRef = window as { 
+    utxoGlobal?: {
+      bitcoinSigner: Provider,
+      ckbSigner: Provider,
+    }
+  };
+
   if (typeof windowRef.utxoGlobal === "undefined") {
     return;
   }
@@ -19,11 +25,11 @@ export function getUtxoGlobalSigners(
   return [
     {
       name: "CKB",
-      signer: new UtxoGlobalCKBSigner(client, windowRef.utxoGlobal),
+      signer: new UtxoGlobalCKBSigner(client, windowRef.utxoGlobal.ckbSigner),
     },
     {
       name: "BTC",
-      signer: new UtxoGlobalBTCSigner(client, windowRef.utxoGlobal),
+      signer: new UtxoGlobalBTCSigner(client, windowRef.utxoGlobal.bitcoinSigner)
     }
   ]
 }
