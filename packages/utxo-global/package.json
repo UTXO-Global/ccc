@@ -44,10 +44,7 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "rimraf": "^5.0.5",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.7.0",
-    "@ckb-lumos/helpers": "^0.22.2",
-    "@ckb-lumos/lumos": "^0.23.0",
-    "@ckb-lumos/config-manager": "^0.22.2"
+    "typescript-eslint": "^7.7.0"
   },
   "publishConfig": {
     "access": "public"
