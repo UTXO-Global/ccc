@@ -12,7 +12,7 @@ export class SignerCkb extends ccc.Signer {
    * @returns {ccc.SignerSignType} The sign type.
    */
   get signType(): ccc.SignerSignType {
-    return ccc.SignerSignType.UtxoGlobalCkb;
+    return ccc.SignerSignType.CkbSecp256k1;
   }
 
   constructor(
@@ -80,7 +80,7 @@ export class SignerCkb extends ccc.Signer {
     return {
       signature: await this.signMessageRaw(message),
       identity: await this.getIdentity(),
-      signType: ccc.SignerSignType.UtxoGlobalCkb,
+      signType: ccc.SignerSignType.CkbSecp256k1,
     };
   }
 
@@ -94,11 +94,9 @@ export class SignerCkb extends ccc.Signer {
 
     if (
       signature.identity !== (await this.getIdentity()) ||
-      ![
-        ccc.SignerSignType.Unknown,
-        this.signType,
-        ccc.SignerSignType.UtxoGlobalCkb,
-      ].includes(signature.signType)
+      ![this.signType, ccc.SignerSignType.CkbSecp256k1].includes(
+        signature.signType,
+      )
     ) {
       return false;
     }
@@ -111,11 +109,7 @@ export class SignerCkb extends ccc.Signer {
     signature: string | ccc.Signature,
   ): Promise<boolean> {
     const pubKey = await this.getPublicKey();
-    return ccc.verifyMessageUtxoGlobal(
-      message,
-      signature as string,
-      pubKey.slice(2),
-    );
+    return ccc.verifyMessageCkbSecp256k1(message, signature as string, pubKey);
   }
 
   async signOnlyTransaction(

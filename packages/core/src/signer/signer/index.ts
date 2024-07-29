@@ -7,7 +7,6 @@ import { Num } from "../../num";
 import { verifyMessageBtcEcdsa } from "../btc";
 import { verifyMessageCkbSecp256k1 } from "../ckb/verifyCkbSecp256k1";
 import { verifyMessageJoyId } from "../ckb/verifyJoyId";
-import { verifyMessageUtxoGlobal } from "../ckb/verifyUtxoGlobal";
 import { verifyMessageEvmPersonal } from "../evm/verify";
 import { verifyMessageNostrEvent } from "../nostr/verify";
 
@@ -17,7 +16,6 @@ export enum SignerSignType {
   EvmPersonal = "EvmPersonal",
   JoyId = "JoyId",
   NostrEvent = "NostrEvent",
-  UtxoGlobalCkb = "UtxoGlobalCkb",
   CkbSecp256k1 = "CkbSecp256k1",
 }
 
@@ -116,12 +114,6 @@ export abstract class Signer {
         );
       case SignerSignType.NostrEvent:
         return verifyMessageNostrEvent(
-          message,
-          signature.signature,
-          signature.identity,
-        );
-      case SignerSignType.UtxoGlobalCkb:
-        return verifyMessageUtxoGlobal(
           message,
           signature.signature,
           signature.identity,
