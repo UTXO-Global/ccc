@@ -1,7 +1,7 @@
 import { ccc } from "@ckb-ccc/core";
 import { Provider } from "../advancedBarrel";
 
-export class UtxoGlobalBTCSigner extends ccc.SignerBtc {
+export class SignerBtc extends ccc.SignerBtc {
   constructor(
     client: ccc.Client,
     public readonly provider: Provider,

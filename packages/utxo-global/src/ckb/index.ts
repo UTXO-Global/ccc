@@ -1,10 +1,10 @@
-import { BytesLike, KnownScript, Script, Signature, SignerSignType, ccc } from "@ckb-ccc/core";
+import { ccc } from "@ckb-ccc/core";
+import { cccA } from "@ckb-ccc/core/advanced";
 import { Provider } from "../advancedBarrel";
-import { JsonRpcTransformers } from "@ckb-ccc/core/advancedBarrel";
 
-export class UtxoGlobalCKBSigner extends ccc.Signer {
 
-  
+export class SignerCkb extends ccc.Signer {
+
   get type(): ccc.SignerType {
     return ccc.SignerType.CKB;
   }
@@ -14,7 +14,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
    * @returns {ccc.SignerSignType} The sign type.
    */
   get signType(): ccc.SignerSignType {
-    return ccc.SignerSignType.UtxoGlobalCKB;
+    return ccc.SignerSignType.UtxoGlobalCkb;
   }
 
   constructor(
@@ -76,13 +76,13 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     return {
       signature: await this.signMessageRaw(message),
       identity: await this.getIdentity(),
-      signType: SignerSignType.UtxoGlobalCKB,
+      signType: ccc.SignerSignType.UtxoGlobalCkb,
     };
   }
 
   async verifyMessage(
-    message: string | BytesLike,
-    signature: string | Signature,
+    message: string | ccc.BytesLike,
+    signature: string | ccc.Signature,
   ): Promise<boolean> {
     if (typeof signature === "string") {
       return this.verifyMessageRaw(message, signature);
@@ -90,7 +90,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
 
     if (
       signature.identity !== (await this.getIdentity()) ||
-      ![SignerSignType.Unknown, this.signType, SignerSignType.UtxoGlobalCKB].includes(signature.signType)
+      ![ccc.SignerSignType.Unknown, this.signType, ccc.SignerSignType.UtxoGlobalCkb].includes(signature.signType)
     ) {
       return false;
     }
@@ -107,7 +107,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
 
-    const rawTx = JsonRpcTransformers.transactionFrom(txLike)
+    const rawTx = cccA.JsonRpcTransformers.transactionFrom(txLike)
     const txSigned = await this.provider.signTransaction(rawTx)
     return JSON.parse(txSigned) as ccc.Transaction;
   }
@@ -119,7 +119,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     const addessObjs = await this.getAddressObjs();
     await tx.addCellDepsOfKnownScripts(
       this.client,
-      KnownScript.Secp256k1Blake160,
+      ccc.KnownScript.Secp256k1Blake160,
     );
     await tx.prepareSighashAllWitness(addessObjs[0].script, 65, this.client);
     return tx;

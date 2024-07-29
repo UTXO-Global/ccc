@@ -16,7 +16,7 @@ export enum SignerSignType {
   EvmPersonal = "EvmPersonal",
   JoyId = "JoyId",
   NostrEvent = "NostrEvent",
-  UtxoGlobalCKB = "UtxoGlobalCKB",
+  UtxoGlobalCkb = "UtxoGlobalCkb",
   CkbSecp256k1 = "CkbSecp256k1",
 }
 
@@ -119,7 +119,7 @@ export abstract class Signer {
           signature.signature,
           signature.identity,
         );
-      case SignerSignType.UtxoGlobalCKB:
+      case SignerSignType.UtxoGlobalCkb:
         return verifyMessageUtxoGlobal(
           message,
           signature.signature,

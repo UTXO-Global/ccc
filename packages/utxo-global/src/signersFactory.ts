@@ -1,11 +1,11 @@
-import { SignerInfo, ccc } from "@ckb-ccc/core";
+import { ccc } from "@ckb-ccc/core";
 import { Provider } from "./advancedBarrel";
-import { UtxoGlobalCKBSigner } from "./ckb";
-import { UtxoGlobalBTCSigner } from "./btc";
+import { SignerCkb } from "./ckb";
+import { SignerBtc } from "./btc";
 
 export function getUtxoGlobalSigners(
   client: ccc.Client
-): SignerInfo[] | undefined {
+): ccc.SignerInfo[] | undefined {
   
   const windowRef = window as { 
     utxoGlobal?: {
@@ -17,19 +17,15 @@ export function getUtxoGlobalSigners(
   if (typeof windowRef.utxoGlobal === "undefined") {
     return;
   }
-
-  // TODO
-  // Currently only supports CKB, waiting for utxo wallet 
-  // to support network switch and separate providers for CKB and BTC
   
   return [
     {
       name: "CKB",
-      signer: new UtxoGlobalCKBSigner(client, windowRef.utxoGlobal.ckbSigner),
+      signer: new SignerCkb(client, windowRef.utxoGlobal.ckbSigner),
     },
     {
       name: "BTC",
-      signer: new UtxoGlobalBTCSigner(client, windowRef.utxoGlobal.bitcoinSigner)
+      signer: new SignerBtc(client, windowRef.utxoGlobal.bitcoinSigner)
     }
   ]
 }
