@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center" style="font-size: 64px;">
-  CCC
+  CCC's support for Utxo Global
 </h1>
 
 <p align="center">
@@ -21,11 +21,13 @@
 </p>
 
 <p align="center">
-  "Common Chains Connector" is where CCC begins.
+  "CCC - CKBers' Codebase" is the next step of "Common Chains Connector".
   <br />
-  CCC helps you to interoperate wallets from different chain ecosystems with CKB,
+  Empower yourself with CCC to discover the unlimited potential of CKB.
   <br />
-  fully enabling CKB's cryptographic freedom power.
+  Interoperate with wallets from different chain ecosystems.
+  <br />
+  Fully enabling CKB's Turing completeness and cryptographic freedom power.
 </p>
 
 ## Preview
