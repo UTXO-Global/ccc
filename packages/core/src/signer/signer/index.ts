@@ -119,13 +119,13 @@ export abstract class Signer {
           signature.signature,
           signature.identity,
         );
-      case SignerSignType.CkbSecp256k1:
       case SignerSignType.UtxoGlobalCKB:
         return verifyMessageUtxoGlobal(
           message,
           signature.signature,
           signature.identity,
         );
+      case SignerSignType.CkbSecp256k1:
       case SignerSignType.Unknown:
         throw new Error("Unknown signer sign type");
     }

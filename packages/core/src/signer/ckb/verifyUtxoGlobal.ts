@@ -1,7 +1,7 @@
-import blake2b from "blake2b";
 import { BytesLike } from "../../bytes";
-import { hexFrom } from "../../hex";
+import blake2b from "blake2b";
 import { ecdsaVerify } from "secp256k1";
+import { hexFrom } from "../../hex";
 
 const PERSONAL = new Uint8Array([99, 107, 98, 45, 100, 101, 102, 97, 117, 108, 116, 45, 104, 97, 115, 104])
 export function verifyMessageUtxoGlobal(
@@ -10,7 +10,6 @@ export function verifyMessageUtxoGlobal(
   publicKey: string,
 ): boolean {
   const challenge = typeof message === "string" ? message : hexFrom(message).slice(2);
-  
   
   const encoder = new TextEncoder();
   const _message = encoder.encode(challenge as string);

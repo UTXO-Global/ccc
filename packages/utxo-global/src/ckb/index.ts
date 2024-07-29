@@ -109,7 +109,6 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
 
     const rawTx = JsonRpcTransformers.transactionFrom(txLike)
     const txSigned = await this.provider.signTransaction(rawTx)
-    console.log("txSigned", txSigned)
     return JSON.parse(txSigned) as ccc.Transaction;
   }
 
