@@ -144,7 +144,7 @@ export class WebComponentConnector extends LitElement {
     >
       <div class="main" ${ref(this.mainRef)}>
         ${this.wallet && this.signer
-        ? html`
+          ? html`
               <ccc-connected-scene
                 .wallet=${this.wallet}
                 .signer=${this.signer.signer}
@@ -152,15 +152,15 @@ export class WebComponentConnector extends LitElement {
                 ${ref(this.bodyRef)}
               ></ccc-connected-scene>
             `
-        : html`
+          : html`
               <ccc-selecting-scene
                 .wallets=${this.signersController.wallets}
                 @connected=${({ walletName, signerName }: ConnectedEvent) => {
-            this.walletName = walletName;
-            this.signerName = signerName;
-            this.refreshSigner();
-            this.saveConnection();
-          }}
+                  this.walletName = walletName;
+                  this.signerName = signerName;
+                  this.refreshSigner();
+                  this.saveConnection();
+                }}
                 ${ref(this.bodyRef)}
               ></ccc-selecting-scene>
             `}
@@ -172,8 +172,9 @@ export class WebComponentConnector extends LitElement {
     if (!this.mainRef.value) {
       return;
     }
-    this.mainRef.value.style.height = `${this.bodyRef.value?.offsetHeight ?? 0
-      }px`;
+    this.mainRef.value.style.height = `${
+      this.bodyRef.value?.offsetHeight ?? 0
+    }px`;
   }
 
   static styles = css`

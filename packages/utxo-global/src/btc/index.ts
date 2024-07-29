@@ -17,7 +17,7 @@ export class SignerBtc extends ccc.SignerBtc {
   async getBtcPublicKey(): Promise<ccc.Hex> {
     const pubKeys = await this.provider.getPublicKey();
     const account = await this.getBtcAccount();
-    const pubKey = pubKeys.find(_pubKey => _pubKey.address === account)
+    const pubKey = pubKeys.find((_pubKey) => _pubKey.address === account);
     return ccc.hexFrom(pubKey?.publicKey!);
   }
 
@@ -30,7 +30,8 @@ export class SignerBtc extends ccc.SignerBtc {
   }
 
   async signMessageRaw(message: string | ccc.BytesLike): Promise<string> {
-    const challenge = typeof message === "string" ? message : ccc.hexFrom(message).slice(2);
+    const challenge =
+      typeof message === "string" ? message : ccc.hexFrom(message).slice(2);
     const account = await this.getBtcAccount();
     return this.provider.signMessage(challenge, account);
   }

@@ -1,23 +1,22 @@
 import { ccc } from "@ckb-ccc/core";
 import { Provider } from "./advancedBarrel";
-import { SignerCkb } from "./ckb";
 import { SignerBtc } from "./btc";
+import { SignerCkb } from "./ckb";
 
 export function getUtxoGlobalSigners(
-  client: ccc.Client
+  client: ccc.Client,
 ): ccc.SignerInfo[] | undefined {
-  
-  const windowRef = window as { 
+  const windowRef = window as {
     utxoGlobal?: {
-      bitcoinSigner: Provider,
-      ckbSigner: Provider,
-    }
+      bitcoinSigner: Provider;
+      ckbSigner: Provider;
+    };
   };
 
   if (typeof windowRef.utxoGlobal === "undefined") {
     return;
   }
-  
+
   return [
     {
       name: "CKB",
@@ -25,7 +24,7 @@ export function getUtxoGlobalSigners(
     },
     {
       name: "BTC",
-      signer: new SignerBtc(client, windowRef.utxoGlobal.bitcoinSigner)
-    }
-  ]
+      signer: new SignerBtc(client, windowRef.utxoGlobal.bitcoinSigner),
+    },
+  ];
 }

@@ -19,4 +19,4 @@ export const UTXO_GLOBAL_SVG = encodeSvgToImgSrc(`
     </clipPath>
     </defs>
 </svg>
-`)
+`);
