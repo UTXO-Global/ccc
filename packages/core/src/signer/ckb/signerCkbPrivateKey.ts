@@ -5,6 +5,7 @@ import { Client } from "../../client";
 import { Hex, hexFrom, HexLike } from "../../hex";
 import { numBeToBytes } from "../../num";
 import { SignerCkbPublicKey } from "./signerCkbPublicKey";
+import { messageHashCkbSecp256k1 } from "./verifyCkbSecp256k1";
 
 export class SignerCkbPrivateKey extends SignerCkbPublicKey {
   public readonly privateKey: Hex;
@@ -21,7 +22,7 @@ export class SignerCkbPrivateKey extends SignerCkbPublicKey {
 
   async signMessageRaw(message: string | BytesLike): Promise<Hex> {
     const signature = secp256k1.sign(
-      bytesFrom(message),
+      bytesFrom(messageHashCkbSecp256k1(message)),
       bytesFrom(this.privateKey),
     );
     const { r, s, recovery } = signature;
