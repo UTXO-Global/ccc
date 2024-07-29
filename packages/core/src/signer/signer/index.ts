@@ -6,9 +6,9 @@ import { Hex } from "../../hex";
 import { Num } from "../../num";
 import { verifyMessageBtcEcdsa } from "../btc";
 import { verifyMessageJoyId } from "../ckb/verifyJoyId";
+import { verifyMessageUtxoGlobal } from "../ckb/verifyUtxoGlobal";
 import { verifyMessageEvmPersonal } from "../evm/verify";
 import { verifyMessageNostrEvent } from "../nostr/verify";
-import { verifyMessageUtxoGlobal } from "../ckb/verifyUtxoGlobal";
 
 export enum SignerSignType {
   Unknown = "Unknown",
@@ -52,7 +52,7 @@ export class Signature {
     public signature: string,
     public identity: string,
     public signType: SignerSignType,
-  ) { }
+  ) {}
 }
 
 /**
@@ -60,7 +60,7 @@ export class Signature {
  * This class provides methods to connect, get addresses, and sign transactions.
  */
 export abstract class Signer {
-  constructor(protected client_: Client) { }
+  constructor(protected client_: Client) {}
 
   abstract get type(): SignerType;
   abstract get signType(): SignerSignType;
@@ -144,7 +144,7 @@ export abstract class Signer {
    * @returns A function for unregister
    */
   onReplaced(_: () => void): () => void {
-    return () => { };
+    return () => {};
   }
 
   /**
@@ -152,7 +152,7 @@ export abstract class Signer {
    *
    * @returns A promise that resolves when the signer is disconnected.
    */
-  async disconnect(): Promise<void> { }
+  async disconnect(): Promise<void> {}
 
   /**
    * Check if the signer is connected.
@@ -341,7 +341,7 @@ export class SignerInfo {
   constructor(
     public name: string,
     public signer: Signer,
-  ) { }
+  ) {}
 }
 
 /**

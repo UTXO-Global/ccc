@@ -92,7 +92,7 @@ export class SignersController implements ReactiveController {
     }
 
     ccc.UtxoGlobal.getUtxoGlobalSigners(client)?.forEach(({ signer, name }) => {
-      this.addSigner("UTXO Global Wallet", name, UTXO_GLOBAL_SVG, signer)
+      this.addSigner("UTXO Global Wallet", name, UTXO_GLOBAL_SVG, signer);
     });
 
     const eip6963Manager = new ccc.Eip6963.SignerFactory(client);
@@ -128,10 +128,10 @@ export class SignersController implements ReactiveController {
           client,
           type,
           "https://www.okx.com/download?deeplink=" +
-          encodeURIComponent(
-            "okx://wallet/dapp/url?dappUrl=" +
-            encodeURIComponent(window.location.href),
-          ),
+            encodeURIComponent(
+              "okx://wallet/dapp/url?dappUrl=" +
+                encodeURIComponent(window.location.href),
+            ),
         ),
       );
     });
@@ -187,5 +187,5 @@ export class SignersController implements ReactiveController {
     // Wait for plugins to be loaded
     setTimeout(() => this.refresh(), 100);
   }
-  hostDisconnected(): void { }
+  hostDisconnected(): void {}
 }
