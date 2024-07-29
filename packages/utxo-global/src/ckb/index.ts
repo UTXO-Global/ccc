@@ -1,7 +1,8 @@
-import { BytesLike, Script, Signature, SignerSignType, ccc } from "@ckb-ccc/core";
+import { BytesLike, KnownScript, Script, Signature, SignerSignType, bytesFrom, ccc, hashCkb } from "@ckb-ccc/core";
 import { Provider } from "../advancedBarrel";
 import { BI } from "@ckb-lumos/lumos";
 import { TransactionSkeleton } from "@ckb-lumos/lumos/helpers";
+import { JsonRpcTransformers } from "@ckb-ccc/core/advancedBarrel";
 
 export class UtxoGlobalCKBSigner extends ccc.Signer {
 
@@ -30,7 +31,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
   }
 
   async getIdentity(): Promise<string> {
-    return (await this.getPublicKey()).slice(2);
+    return (await this.getPublicKey());
   }
 
   async getAddressObj(): Promise<ccc.Address | undefined> {
@@ -40,6 +41,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
 
   async getAddressObjs(): Promise<ccc.Address[]> {
     const address = await this.getAddressObj()
+
     if (!!address) { 
       return [address]
     }
@@ -55,7 +57,8 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     const pubKeys = await this.provider.getPublicKey();
     const account = await this.getAccount();
     const pubKey = pubKeys.find(_pubKey => _pubKey.address === account)
-    return ccc.hexFrom(pubKey?.publicKey!);
+    
+    return hashCkb(bytesFrom(ccc.hexFrom(pubKey?.publicKey!)));
   }
 
   async connect(): Promise<void> {
@@ -69,7 +72,8 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
   async signMessageRaw(message: string | ccc.BytesLike): Promise<string> {
     const challenge = typeof message === "string" ? message : ccc.hexFrom(message).slice(2);
     const account = await this.getAccount();
-    return this.provider.signMessage(challenge, account);
+    const signature = this.provider.signMessage(challenge, account);
+    return signature;
   }
 
   async signMessage(message: ccc.BytesLike): Promise<ccc.Signature> {
@@ -100,68 +104,15 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
 
   async verifyMessageRaw(message: ccc.BytesLike, signature: string | ccc.Signature): Promise<boolean> {
     const pubKey = await this.getPublicKey();
-    return ccc.verifyMessageUtxoGlobal(message, signature as string, pubKey.slice(2))
+    return ccc.verifyMessageUtxoGlobal(message, signature as string, pubKey)
   }
 
   async signOnlyTransaction(
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
 
-    let txSkeleton = new TransactionSkeleton({});
-    const tx = ccc.Transaction.from(txLike)
-    tx.inputs?.forEach((input: any) => {
-        txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push({
-          outPoint: {
-            txHash: input.previousOutput.txHash,
-            index: this.toHexString(Number(input.previousOutput.index)),
-          },
-          data: input.outputData || "0x",
-          cellOutput: {
-            capacity: this.toHexString(Number(input.cellOutput.capacity)),
-            lock: input.cellOutput.lock,
-            type: input.cellOutput.type || null 
-          },
-
-        }));
-    });
-
-    tx.outputs?.forEach((output: any, index: number) => {
-        txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push({
-          cellOutput: {
-            capacity: this.toHexString(Number(output.capacity)),
-            lock: output.lock,
-            type: output.type || null
-          },
-          data: "0x"
-        }));
-    });
-
-    tx.cellDeps?.forEach((cellDep:any) => {
-        txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => cellDeps.push({
-          outPoint: {
-              txHash: cellDep.outPoint.txHash,
-              index: this.toHexString(Number(cellDep.outPoint.index)),
-          },
-          depType: cellDep.depType
-      }));
-    });
-
-    tx.headerDeps?.forEach((headerDep:any) => {
-        txSkeleton = txSkeleton.update('headerDeps', (headerDeps) => headerDeps.push(headerDep));
-    });
-
-    tx.witnesses?.forEach((witness:any) => {
-        txSkeleton = txSkeleton.update('witnesses', (witnesses) => witnesses.push(witness));
-    });
-
-    const rawTx = JSON.stringify(txSkeleton, (key, value) => {
-      if (typeof value === 'bigint') {
-          return value.toString();
-      }
-      return value;
-    });
-
-    const txSigned = await this.provider.signTransaction(JSON.parse(rawTx))
+    const rawTx = JsonRpcTransformers.transactionFrom(txLike)
+    const txSigned = await this.provider.signTransaction(rawTx)
     return JSON.parse(txSigned) as ccc.Transaction;
   }
 
@@ -169,6 +120,12 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
     const tx = ccc.Transaction.from(txLike);
+    const addessObjs = await this.getAddressObjs();
+    await tx.addCellDepsOfKnownScripts(
+      this.client,
+      KnownScript.Secp256k1Blake160,
+    );
+    await tx.prepareSighashAllWitness(addessObjs[0].script, 65, this.client);
     return tx;
   }
 
