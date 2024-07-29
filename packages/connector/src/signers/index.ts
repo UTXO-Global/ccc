@@ -91,9 +91,12 @@ export class SignersController implements ReactiveController {
       this.addSigner("Nostr", "Nostr", NOSTR_SVG, nip07Signer);
     }
 
-    ccc.UtxoGlobal.getUtxoGlobalSigners(client)?.forEach(({ signer, name }) => {
-      this.addSigner("UTXO Global Wallet", name, UTXO_GLOBAL_SVG, signer);
-    });
+    const utxoGlobalSigners = ccc.UtxoGlobal.getUtxoGlobalSigners(client);
+    if (utxoGlobalSigners) {
+      utxoGlobalSigners.forEach(({ signer, name }) => {
+        this.addSigner("UTXO Global Wallet", name, UTXO_GLOBAL_SVG, signer);
+      });
+    }
 
     const eip6963Manager = new ccc.Eip6963.SignerFactory(client);
     this.resetListeners.push(
@@ -145,6 +148,20 @@ export class SignersController implements ReactiveController {
         "https://unisat.io/download",
       ),
     );
+
+    [ccc.SignerType.CKB, ccc.SignerType.BTC].forEach((type) => {
+      this.addSigner(
+        "UTXO Global Wallet",
+        type,
+        UTXO_GLOBAL_SVG,
+        new ccc.SignerOpenLink(
+          client,
+          type,
+          "https://chromewebstore.google.com/detail/lnamkkidoonpeknminiadpgjiofpdmle",
+        ),
+      );
+    });
+
     // ===
   }
 

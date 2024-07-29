@@ -27,7 +27,7 @@ export class SignerCkb extends ccc.Signer {
   }
 
   async getIdentity(): Promise<string> {
-    return (await this.getPublicKey()).slice(2);
+    return await this.getPublicKey();
   }
 
   async getAddressObj(): Promise<ccc.Address | undefined> {
@@ -41,7 +41,8 @@ export class SignerCkb extends ccc.Signer {
     if (!!address) {
       return [address];
     }
-    return [];
+
+    throw new Error("Can't get addresses from SignerCkb");
   }
 
   async getAccount() {
@@ -52,8 +53,12 @@ export class SignerCkb extends ccc.Signer {
   async getPublicKey(): Promise<ccc.Hex> {
     const pubKeys = await this.provider.getPublicKey();
     const account = await this.getAccount();
-    const pubKey = pubKeys.find((_pubKey) => _pubKey.address === account);
-    return ccc.hexFrom(pubKey?.publicKey!);
+    const pubKey = pubKeys.find((p) => p.address === account);
+    if (!pubKey) {
+      throw new Error("Can't get public key from SignerCkb");
+    }
+
+    return ccc.hexFrom(pubKey.publicKey);
   }
 
   async connect(): Promise<void> {
