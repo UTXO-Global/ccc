@@ -5,8 +5,8 @@ import { Client } from "../../client";
 import { Hex } from "../../hex";
 import { Num } from "../../num";
 import { verifyMessageBtcEcdsa } from "../btc";
+import { verifyMessageCkbSecp256k1 } from "../ckb/verifyCkbSecp256k1";
 import { verifyMessageJoyId } from "../ckb/verifyJoyId";
-import { verifyMessageUtxoGlobal } from "../ckb/verifyUtxoGlobal";
 import { verifyMessageEvmPersonal } from "../evm/verify";
 import { verifyMessageNostrEvent } from "../nostr/verify";
 
@@ -16,7 +16,6 @@ export enum SignerSignType {
   EvmPersonal = "EvmPersonal",
   JoyId = "JoyId",
   NostrEvent = "NostrEvent",
-  UtxoGlobalCKB = "UtxoGlobalCKB",
   CkbSecp256k1 = "CkbSecp256k1",
 }
 
@@ -119,13 +118,12 @@ export abstract class Signer {
           signature.signature,
           signature.identity,
         );
-      case SignerSignType.UtxoGlobalCKB:
-        return verifyMessageUtxoGlobal(
+      case SignerSignType.CkbSecp256k1:
+        return verifyMessageCkbSecp256k1(
           message,
           signature.signature,
           signature.identity,
         );
-      case SignerSignType.CkbSecp256k1:
       case SignerSignType.Unknown:
         throw new Error("Unknown signer sign type");
     }
@@ -265,7 +263,11 @@ export abstract class Signer {
     signature: string | Signature,
   ): Promise<boolean> {
     if (typeof signature === "string") {
-      return this.verifyMessageRaw(message, signature);
+      return Signer.verifyMessage(message, {
+        signType: this.signType,
+        signature,
+        identity: await this.getIdentity(),
+      });
     }
 
     if (
@@ -275,19 +277,7 @@ export abstract class Signer {
       return false;
     }
 
-    return this.verifyMessageRaw(message, signature.signature);
-  }
-
-  /**
-   * Verify a string signature. This method is not implemented and should be overridden by subclasses.
-   *
-   * @param _0 - The original message.
-   * @param _1 - The signature to verify.
-   * @returns A promise that resolves to the verification result.
-   * @throws Will throw an error if not implemented.
-   */
-  verifyMessageRaw(_0: string | BytesLike, _1: string): Promise<boolean> {
-    throw Error("Signer.verifyMessageRaw not implemented");
+    return Signer.verifyMessage(message, signature);
   }
 
   /**

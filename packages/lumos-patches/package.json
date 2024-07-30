@@ -1,6 +1,6 @@
 {
   "name": "@ckb-ccc/lumos-patches",
-  "version": "0.0.8-alpha.3",
+  "version": "0.0.10-alpha.5",
   "description": "Patches for using Lumos with CCC",
   "author": "Hanssen0 <hanssen0@hanssen0.com>",
   "license": "MIT",
@@ -42,6 +42,6 @@
     "@ckb-lumos/codec": "^0.24.0-next.1",
     "@ckb-lumos/common-scripts": "^0.24.0-next.1",
     "@ckb-lumos/config-manager": "^0.24.0-next.1",
-    "@joyid/ckb": "^0.0.11"
+    "@joyid/ckb": "^1.0.1"
   }
 }

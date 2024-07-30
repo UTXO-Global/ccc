@@ -1,14 +1,8 @@
-import {
-  BytesLike,
-  KnownScript,
-  Signature,
-  SignerSignType,
-  ccc,
-} from "@ckb-ccc/core";
-import { JsonRpcTransformers } from "@ckb-ccc/core/advancedBarrel";
+import { ccc } from "@ckb-ccc/core";
+import { cccA } from "@ckb-ccc/core/advanced";
 import { Provider } from "../advancedBarrel";
 
-export class UtxoGlobalCKBSigner extends ccc.Signer {
+export class SignerCkb extends ccc.Signer {
   get type(): ccc.SignerType {
     return ccc.SignerType.CKB;
   }
@@ -18,7 +12,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
    * @returns {ccc.SignerSignType} The sign type.
    */
   get signType(): ccc.SignerSignType {
-    return ccc.SignerSignType.UtxoGlobalCKB;
+    return ccc.SignerSignType.CkbSecp256k1;
   }
 
   constructor(
@@ -33,7 +27,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
   }
 
   async getIdentity(): Promise<string> {
-    return (await this.getPublicKey()).slice(2);
+    return await this.getPublicKey();
   }
 
   async getAddressObj(): Promise<ccc.Address | undefined> {
@@ -47,7 +41,8 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     if (!!address) {
       return [address];
     }
-    return [];
+
+    throw new Error("address not found");
   }
 
   async getAccount() {
@@ -58,8 +53,13 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
   async getPublicKey(): Promise<ccc.Hex> {
     const pubKeys = await this.provider.getPublicKey();
     const account = await this.getAccount();
-    const pubKey = pubKeys.find((_pubKey) => _pubKey.address === account);
-    return ccc.hexFrom(pubKey?.publicKey!);
+    const pubKey = pubKeys.find((p) => p.address === account);
+
+    if (!pubKey) {
+      throw new Error("pubKey not found");
+    }
+
+    return ccc.hexFrom(pubKey.publicKey);
   }
 
   async connect(): Promise<void> {
@@ -81,13 +81,13 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     return {
       signature: await this.signMessageRaw(message),
       identity: await this.getIdentity(),
-      signType: SignerSignType.UtxoGlobalCKB,
+      signType: ccc.SignerSignType.CkbSecp256k1,
     };
   }
 
   async verifyMessage(
-    message: string | BytesLike,
-    signature: string | Signature,
+    message: string | ccc.BytesLike,
+    signature: string | ccc.Signature,
   ): Promise<boolean> {
     if (typeof signature === "string") {
       return this.verifyMessageRaw(message, signature);
@@ -95,11 +95,9 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
 
     if (
       signature.identity !== (await this.getIdentity()) ||
-      ![
-        SignerSignType.Unknown,
-        this.signType,
-        SignerSignType.UtxoGlobalCKB,
-      ].includes(signature.signType)
+      ![this.signType, ccc.SignerSignType.CkbSecp256k1].includes(
+        signature.signType,
+      )
     ) {
       return false;
     }
@@ -112,17 +110,13 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     signature: string | ccc.Signature,
   ): Promise<boolean> {
     const pubKey = await this.getPublicKey();
-    return ccc.verifyMessageUtxoGlobal(
-      message,
-      signature as string,
-      pubKey.slice(2),
-    );
+    return ccc.verifyMessageCkbSecp256k1(message, signature as string, pubKey);
   }
 
   async signOnlyTransaction(
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
-    const rawTx = JsonRpcTransformers.transactionFrom(txLike);
+    const rawTx = cccA.JsonRpcTransformers.transactionFrom(txLike);
     const txSigned = await this.provider.signTransaction(rawTx);
     return JSON.parse(txSigned) as ccc.Transaction;
   }
@@ -134,7 +128,7 @@ export class UtxoGlobalCKBSigner extends ccc.Signer {
     const addessObjs = await this.getAddressObjs();
     await tx.addCellDepsOfKnownScripts(
       this.client,
-      KnownScript.Secp256k1Blake160,
+      ccc.KnownScript.Secp256k1Blake160,
     );
     await tx.prepareSighashAllWitness(addessObjs[0].script, 65, this.client);
     return tx;
