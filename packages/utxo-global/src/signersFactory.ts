@@ -3,9 +3,7 @@ import { Provider } from "./advancedBarrel";
 import { SignerBtc } from "./btc";
 import { SignerCkb } from "./ckb";
 
-export function getUtxoGlobalSigners(
-  client: ccc.Client,
-): ccc.SignerInfo[] {
+export function getUtxoGlobalSigners(client: ccc.Client): ccc.SignerInfo[] {
   const windowRef = window as {
     utxoGlobal?: {
       bitcoinSigner: Provider;

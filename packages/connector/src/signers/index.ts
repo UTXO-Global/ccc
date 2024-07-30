@@ -128,10 +128,10 @@ export class SignersController implements ReactiveController {
           client,
           type,
           "https://www.okx.com/download?deeplink=" +
-          encodeURIComponent(
-            "okx://wallet/dapp/url?dappUrl=" +
-            encodeURIComponent(window.location.href),
-          ),
+            encodeURIComponent(
+              "okx://wallet/dapp/url?dappUrl=" +
+                encodeURIComponent(window.location.href),
+            ),
         ),
       );
     });
@@ -201,5 +201,5 @@ export class SignersController implements ReactiveController {
     // Wait for plugins to be loaded
     setTimeout(() => this.refresh(), 100);
   }
-  hostDisconnected(): void { }
+  hostDisconnected(): void {}
 }
