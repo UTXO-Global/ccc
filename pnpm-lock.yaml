@@ -44,6 +44,9 @@ importers:
       '@ckb-ccc/uni-sat':
         specifier: workspace:*
         version: link:../uni-sat
+      '@ckb-ccc/utxo-global':
+        specifier: workspace:*
+        version: link:../utxo-global
     devDependencies:
       '@eslint/js':
         specifier: ^9.1.1
@@ -193,8 +196,8 @@ importers:
         specifier: ^0.22.2
         version: 0.22.2(encoding@0.1.13)
       '@joyid/ckb':
-        specifier: ^0.0.11
-        version: 0.0.11(encoding@0.1.13)(typescript@5.4.5)
+        specifier: ^1.0.1
+        version: 1.0.1(encoding@0.1.13)(typescript@5.4.5)
       '@noble/curves':
         specifier: ^1.4.2
         version: 1.4.2
@@ -288,17 +291,20 @@ importers:
         specifier: workspace:*
         version: link:../lumos-patches
       '@ckb-lumos/ckb-indexer':
-        specifier: ^0.22.2
-        version: 0.22.2(encoding@0.1.13)
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1(encoding@0.1.13)
       '@ckb-lumos/common-scripts':
-        specifier: ^0.22.2
-        version: 0.22.2(encoding@0.1.13)
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1(encoding@0.1.13)
       '@ckb-lumos/config-manager':
-        specifier: ^0.22.2
-        version: 0.22.2(encoding@0.1.13)
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1(encoding@0.1.13)
+      '@ckb-lumos/hd':
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1
       '@ckb-lumos/helpers':
-        specifier: ^0.22.2
-        version: 0.22.2(encoding@0.1.13)
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1(encoding@0.1.13)
       '@headlessui/react':
         specifier: ^1.7.19
         version: 1.7.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -376,8 +382,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@joyid/ckb':
-        specifier: ^1.0.0
-        version: 1.0.0(encoding@0.1.13)(typescript@5.4.5)
+        specifier: ^1.0.1
+        version: 1.0.1(encoding@0.1.13)(typescript@5.4.5)
       '@joyid/common':
         specifier: ^0.2.0
         version: 0.2.0(typescript@5.4.5)
@@ -413,20 +419,20 @@ importers:
   packages/lumos-patches:
     dependencies:
       '@ckb-lumos/base':
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1
       '@ckb-lumos/codec':
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1
       '@ckb-lumos/common-scripts':
-        specifier: ^0.22.2
-        version: 0.22.2(encoding@0.1.13)
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1(encoding@0.1.13)
       '@ckb-lumos/config-manager':
-        specifier: ^0.22.2
-        version: 0.22.2(encoding@0.1.13)
+        specifier: ^0.24.0-next.1
+        version: 0.24.0-next.1(encoding@0.1.13)
       '@joyid/ckb':
-        specifier: ^0.0.11
-        version: 0.0.11(encoding@0.1.13)(typescript@5.4.5)
+        specifier: ^1.0.1
+        version: 1.0.1(encoding@0.1.13)(typescript@5.4.5)
     devDependencies:
       '@eslint/js':
         specifier: ^9.1.1
@@ -495,6 +501,9 @@ importers:
       '@ckb-ccc/core':
         specifier: workspace:*
         version: link:../core
+      '@ckb-ccc/nip07':
+        specifier: workspace:*
+        version: link:../nip07
       '@ckb-ccc/uni-sat':
         specifier: workspace:*
         version: link:../uni-sat
@@ -528,6 +537,40 @@ importers:
         version: 7.7.0(eslint@9.1.0)(typescript@5.4.5)
 
   packages/uni-sat:
+    dependencies:
+      '@ckb-ccc/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@eslint/js':
+        specifier: ^9.1.1
+        version: 9.1.1
+      eslint:
+        specifier: ^9.1.0
+        version: 9.1.0
+      eslint-config-prettier:
+        specifier: ^9.1.0
+        version: 9.1.0(eslint@9.1.0)
+      eslint-plugin-prettier:
+        specifier: ^5.1.3
+        version: 5.1.3(eslint-config-prettier@9.1.0(eslint@9.1.0))(eslint@9.1.0)(prettier@3.2.5)
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      prettier-plugin-organize-imports:
+        specifier: ^3.2.4
+        version: 3.2.4(prettier@3.2.5)(typescript@5.4.5)
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+      typescript-eslint:
+        specifier: ^7.7.0
+        version: 7.7.0(eslint@9.1.0)(typescript@5.4.5)
+
+  packages/utxo-global:
     dependencies:
       '@ckb-ccc/core':
         specifier: workspace:*
@@ -765,52 +808,72 @@ packages:
     resolution: {integrity: sha512-nosUCSa5rTV2IzxbEpqzrvUeQNXB66mgA0h40+QEdnE/gV/s4ke83AScrTAxWkErJy1G/sToIHCc2kWwO95DfQ==}
     engines: {node: '>=12.0.0'}
 
-  '@ckb-lumos/base@0.23.0':
-    resolution: {integrity: sha512-8aLFsUyWIK0rT7GQlYFuXyiG5lQ2bLRK2GvUsxv5G7I3nJ1UyxjwvVOdtlsR/cwhzOam3ujwqASqBIayBL6GLA==}
+  '@ckb-lumos/base@0.24.0-next.1':
+    resolution: {integrity: sha512-p9veifS3aT0DqdIYWlG6jCUgA68m9baTDzyELIGU1RlLga0yXEElSkY9F534u6eqgriNWBb1b9imMV75sEPauw==}
     engines: {node: '>=12.0.0'}
 
   '@ckb-lumos/bi@0.22.2':
     resolution: {integrity: sha512-F+dLC/tE+xdtNuGgJxlDqbgX/f8azg1tvIFTR5mu7Vhz08nkFgnA+Z+yC0t/I3fDwwH4p/SlGP/yducrsfVTqw==}
     engines: {node: '>=12.0.0'}
 
-  '@ckb-lumos/bi@0.23.0':
-    resolution: {integrity: sha512-KAy+lyVpL+Al4XD+c9tHrA9DSpHkMusyXtTS81aNZi5MyL6F9jrVmFcqLorhfyfl8Fsv2sEjMe5Neo2Y+w/RJQ==}
+  '@ckb-lumos/bi@0.24.0-next.1':
+    resolution: {integrity: sha512-rSkEFSO97b6z58aPrvpXQEBkOBFn/qM2w4VZRhiK64SAwlPPU7c9Pxfd6VBfvp3kK6D3fE9TtVeF/7GRc23Wzw==}
     engines: {node: '>=12.0.0'}
 
-  '@ckb-lumos/ckb-indexer@0.22.2':
-    resolution: {integrity: sha512-y4v2yNa3IYURcUc+lkFs/4/nV4W0QQeCORtv1IlkgbES0718XB4IMGWvQtSGKAC94A9B4kSHREcyn0d+9lMzew==}
+  '@ckb-lumos/ckb-indexer@0.24.0-next.1':
+    resolution: {integrity: sha512-mdl9cB0IjS8oEixKSWXynObAADjtJIZr1YFFzICLErDHYSOp+KfM7kkmcakE2hLEIpNUPflkOY1eTBilGD7Z0Q==}
     engines: {node: '>=12.0.0'}
 
   '@ckb-lumos/codec@0.22.2':
     resolution: {integrity: sha512-P5SyhT2qkJwCwcHF3yMLInE0z3wWHDkqJNbSM2Q9oyu0+9kjMQfexNia3T+atBl2M7ELFzN5WvttojYr6DrCwQ==}
     engines: {node: '>=12.0.0'}
 
-  '@ckb-lumos/codec@0.23.0':
-    resolution: {integrity: sha512-FwYooXnsFDjlHHnlFnCTB1UbBzV72I0VjkRpeauFk5nQ4+/75xl28ywK3J14M+0aHTnYU9msXUTRDAGqC0CaNQ==}
+  '@ckb-lumos/codec@0.24.0-next.1':
+    resolution: {integrity: sha512-Nc0OtH3WZpa7Ryp/o7QodCuf49/806cz2J4S3KEhL7WZnPwHCwKAhpUNeRTubNzQRlRzUqok3/NoJAlKclOuhw==}
     engines: {node: '>=12.0.0'}
 
-  '@ckb-lumos/common-scripts@0.22.2':
-    resolution: {integrity: sha512-eSXutpQXqAVh0MorCG8bg+xcMqxhpiJCXgdgfpQAA0q6BkdSGmu4Zn3InFRdeHZam8ap02dadVK7ZOi4ZaUKCg==}
+  '@ckb-lumos/common-scripts@0.24.0-next.1':
+    resolution: {integrity: sha512-4QvQZ8wigZSYzMNfI2R6OrZsIb2pRD1jt6gHXk8WF1bnyZmiyPlNlKyo8sgpXFNdR6x2it5z5yFdv9s4OPl7wA==}
     engines: {node: '>=12.0.0'}
 
   '@ckb-lumos/config-manager@0.22.2':
     resolution: {integrity: sha512-LJ4p80VrCHh178Ks4wW1rEyHC/JWtZxrFiwHinA9aG6aOm2Z9hbZO0/ZKoS5pLfW0gxP2+ZHA3oMVt0UJhlTKA==}
     engines: {node: '>=12.0.0'}
 
+  '@ckb-lumos/config-manager@0.24.0-next.1':
+    resolution: {integrity: sha512-rKgzpVJ0rhFnVjPW2NWnQF/keZTe382GlNt/N2Fz/lEQJidnxfqTb9UizpcuTX2LXYz53iS13c9/PwoLUzmlEw==}
+    engines: {node: '>=12.0.0'}
+
+  '@ckb-lumos/crypto@0.24.0-next.1':
+    resolution: {integrity: sha512-sJLZKtnL0C6gi2yKbu4mp6UDNzOpaeidCTGCWhG39527PvQ1CYDh6PVr2zq5K6AL7OgnxsWZK1yvJ+KoHdVOqQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@ckb-lumos/hd@0.24.0-next.1':
+    resolution: {integrity: sha512-VVOJjU5KZPmb3cmaGPOHJOcxIrKMfYPuo/D51bqSOQ3MZswN4aR6cwW2sQSp7QdDPzOiD/ZPBIMGmuYPEW5zew==}
+    engines: {node: '>=12.0.0'}
+
   '@ckb-lumos/helpers@0.22.2':
     resolution: {integrity: sha512-6ztXwxsaCuoHjkbclAnfAv9BYl02t+/XxNtl3Et4Sl09xIp9HJ9/vyJouC9JjdQdnfkv1zVGN9tLiKwc6QudaQ==}
+    engines: {node: '>=12.0.0'}
+
+  '@ckb-lumos/helpers@0.24.0-next.1':
+    resolution: {integrity: sha512-w9L3TdbUEWQXa8CFVDCNuoyrDYba/6+j6ZCXfAWe16CRu5vWsf6gNwMrHy9w9jPJAY2mDRNvgwcMiO7KCMfzbw==}
     engines: {node: '>=12.0.0'}
 
   '@ckb-lumos/rpc@0.22.2':
     resolution: {integrity: sha512-c2SX0ooDJO3dV2JOTTQtKZs0k+dHst+NHfbYJ6mYWApcZWx2nG4bQR3CQFMIKnd5CKYP/r2JuaonDkcRH9vmzw==}
     engines: {node: '>=12.0.0'}
 
+  '@ckb-lumos/rpc@0.24.0-next.1':
+    resolution: {integrity: sha512-RBIqxxzmkdcSlgwyEv9ezW+x+uovVT7P5+6Ox8eEtoN6L/+hOgLH2MYzishFJXSn93H86GLz/9BPQ/0qx2wUWA==}
+    engines: {node: '>=12.0.0'}
+
   '@ckb-lumos/toolkit@0.22.2':
     resolution: {integrity: sha512-HmKz2dGQeaW2XDqkvjJfLv50VQWGKbthg2RDfIxGsZyjveluRROTyuHP1akypy4pqF8TApGLsXci2MaHCRau+w==}
     engines: {node: '>=12.0.0'}
 
-  '@ckb-lumos/toolkit@0.23.0':
-    resolution: {integrity: sha512-7LTsUFfoNCBWJLgh+V/QFnemjGw+y4mmLeQvubwYuJqIPIhIpwKUuKRzkvVG8snA8xVQSfjSSQOs5m3mKp66Kg==}
+  '@ckb-lumos/toolkit@0.24.0-next.1':
+    resolution: {integrity: sha512-BN0phy014RJV+MhnHkkcO+skQxHN7JPwfszEML0aPnhwtEyZpHjMJx01+BijLUCli9rCZqZrM0QvMoM2wpJV1w==}
     engines: {node: '>=12.0.0'}
 
   '@eslint-community/eslint-utils@4.4.0':
@@ -858,6 +921,7 @@ packages:
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -952,14 +1016,8 @@ packages:
     resolution: {integrity: sha512-u3UPsIilWKOM3F9CXtrG8LEJmNxwoCQC/XVj4IKYXvvpx7QIi/Kg1LI5uDmDpKlac62NUtX7eLjRh+jVZcLOzw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  '@joyid/ckb@0.0.11':
-    resolution: {integrity: sha512-Nxl+vHju57qChP+QI3ycnlTpQCLsQc+Kp/YUxjDoPkbHikBXPsKGyvTOgO1RIqZMAoQpYbO6FDt1P+nIVxVVCQ==}
-
-  '@joyid/ckb@1.0.0':
-    resolution: {integrity: sha512-uJocaVSN9sBXun/ANkNohZtG8ByfC7B3PZtCrmhzEQ6etpbPa6ByGMZZubIFwjOG5i1ynPWXLvAi8CW2SKOmCw==}
-
-  '@joyid/common@0.0.3':
-    resolution: {integrity: sha512-bih1dRqFpNP6tLNpebO2pp72r8L9WFtlGUa7a2x3l336G66ieS1uyNGb/yZzY+f3Fs1E40s10m7D+qSnfwtjJQ==}
+  '@joyid/ckb@1.0.1':
+    resolution: {integrity: sha512-pKAJouigChqcwKgtLw4RNOwi+nBh3NVjpU+qZd+uu3wmoTpivnSRLbJH8/SlkgQcWn2aJ+mDJchR8GpQYh5H6Q==}
 
   '@joyid/common@0.2.0':
     resolution: {integrity: sha512-WBZtgdEccWxjiGHIoDgRFIbnC42ZvmfvFRCTxmx9D4BLvtiFdhAa+g70lUmiHwO28GjgHIHgzHRGNRdLuk81xw==}
@@ -997,11 +1055,11 @@ packages:
   '@lit/reactive-element@2.0.4':
     resolution: {integrity: sha512-GFn91inaUa2oHLak8awSIigYz0cU0Payr1rcFsrkf5OJ5eSPxElyZfKh0f2p9FsTiZWXQdWGJeXZICEfXXYSXQ==}
 
-  '@nervosnetwork/ckb-sdk-utils@0.109.1':
-    resolution: {integrity: sha512-KK8w+JZGPt/Gq/Y0b87AuQp8mGR46fBSkqnjwASdBAi2rts9tJ6srEaZ3FVVa9LtjTlThQ120hex+mcyastrkQ==}
+  '@nervosnetwork/ckb-sdk-utils@0.109.2':
+    resolution: {integrity: sha512-pXgQvQQA2TuXiAmKGvL9kWjXdCsX+qP8HqHSLt6kwrjFe846d4dZxZ5AunpP+xsQNst+L5V7xcvunaBOkTdD6g==}
 
-  '@nervosnetwork/ckb-types@0.109.1':
-    resolution: {integrity: sha512-mD5mOCGa1JertKZekHSUVYwFPW27VJ0/MdwblWvEEK7pNIU6az+dLiIxgvl4TxR+j+7/GqmXNH1U59CM92y/wg==}
+  '@nervosnetwork/ckb-types@0.109.2':
+    resolution: {integrity: sha512-NAQbUi+j6tWlUYijvHqWIUwrbawIeAeSlxUQm0wkqSKbtAEoiR4L6RZS7cgn7uH+SMsp78mciXP8gixrfH3rEQ==}
 
   '@next/env@14.2.2':
     resolution: {integrity: sha512-sk72qRfM1Q90XZWYRoJKu/UWlTgihrASiYw/scb15u+tyzcze3bOuJ/UV6TBOQEeUaxOkRqGeuGUdiiuxc5oqw==}
@@ -1062,6 +1120,9 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@noble/ciphers@0.5.3':
+    resolution: {integrity: sha512-B0+6IIHiqEs3BPMT0hcRmHvEj2QHOLu+uwt+tqDDeVd0oyVzh7BPrDcPjRnV1PV/5LaknXJJQvOuRGR0zQJz+w==}
 
   '@noble/curves@1.2.0':
     resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
@@ -2746,6 +2807,7 @@ packages:
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@9.3.5:
     resolution: {integrity: sha512-e1LleDykUz2Iu+MTYdkSsuWX8lvAjAcs0Xef0lNIu0S2wOAzuTxCJtcd9S3cijlwYF18EsU3rzb8jPVobxDh9Q==}
@@ -4907,6 +4969,10 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
@@ -5305,32 +5371,31 @@ snapshots:
       js-xxhash: 1.0.4
       lodash.isequal: 4.5.0
 
-  '@ckb-lumos/base@0.23.0':
+  '@ckb-lumos/base@0.24.0-next.1':
     dependencies:
-      '@ckb-lumos/bi': 0.23.0
-      '@ckb-lumos/codec': 0.23.0
-      '@ckb-lumos/toolkit': 0.23.0
+      '@ckb-lumos/bi': 0.24.0-next.1
+      '@ckb-lumos/codec': 0.24.0-next.1
+      '@ckb-lumos/toolkit': 0.24.0-next.1
       '@types/blake2b': 2.1.3
       '@types/lodash.isequal': 4.5.8
       blake2b: 2.1.4
       js-xxhash: 1.0.4
-      lodash.isequal: 4.5.0
 
   '@ckb-lumos/bi@0.22.2':
     dependencies:
       jsbi: 4.3.0
 
-  '@ckb-lumos/bi@0.23.0':
+  '@ckb-lumos/bi@0.24.0-next.1':
     dependencies:
       jsbi: 4.3.0
 
-  '@ckb-lumos/ckb-indexer@0.22.2(encoding@0.1.13)':
+  '@ckb-lumos/ckb-indexer@0.24.0-next.1(encoding@0.1.13)':
     dependencies:
-      '@ckb-lumos/base': 0.22.2
-      '@ckb-lumos/bi': 0.22.2
-      '@ckb-lumos/codec': 0.22.2
-      '@ckb-lumos/rpc': 0.22.2(encoding@0.1.13)
-      '@ckb-lumos/toolkit': 0.22.2
+      '@ckb-lumos/base': 0.24.0-next.1
+      '@ckb-lumos/bi': 0.24.0-next.1
+      '@ckb-lumos/codec': 0.24.0-next.1
+      '@ckb-lumos/rpc': 0.24.0-next.1(encoding@0.1.13)
+      '@ckb-lumos/toolkit': 0.24.0-next.1
       cross-fetch: 3.1.8(encoding@0.1.13)
       events: 3.3.0
     transitivePeerDependencies:
@@ -5340,19 +5405,20 @@ snapshots:
     dependencies:
       '@ckb-lumos/bi': 0.22.2
 
-  '@ckb-lumos/codec@0.23.0':
+  '@ckb-lumos/codec@0.24.0-next.1':
     dependencies:
-      '@ckb-lumos/bi': 0.23.0
+      '@ckb-lumos/bi': 0.24.0-next.1
 
-  '@ckb-lumos/common-scripts@0.22.2(encoding@0.1.13)':
+  '@ckb-lumos/common-scripts@0.24.0-next.1(encoding@0.1.13)':
     dependencies:
-      '@ckb-lumos/base': 0.22.2
-      '@ckb-lumos/bi': 0.22.2
-      '@ckb-lumos/codec': 0.22.2
-      '@ckb-lumos/config-manager': 0.22.2(encoding@0.1.13)
-      '@ckb-lumos/helpers': 0.22.2(encoding@0.1.13)
-      '@ckb-lumos/rpc': 0.22.2(encoding@0.1.13)
-      '@ckb-lumos/toolkit': 0.22.2
+      '@ckb-lumos/base': 0.24.0-next.1
+      '@ckb-lumos/bi': 0.24.0-next.1
+      '@ckb-lumos/codec': 0.24.0-next.1
+      '@ckb-lumos/config-manager': 0.24.0-next.1(encoding@0.1.13)
+      '@ckb-lumos/crypto': 0.24.0-next.1
+      '@ckb-lumos/helpers': 0.24.0-next.1(encoding@0.1.13)
+      '@ckb-lumos/rpc': 0.24.0-next.1(encoding@0.1.13)
+      '@ckb-lumos/toolkit': 0.24.0-next.1
       bech32: 2.0.0
       bs58: 5.0.0
       immutable: 4.3.5
@@ -5370,6 +5436,32 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@ckb-lumos/config-manager@0.24.0-next.1(encoding@0.1.13)':
+    dependencies:
+      '@ckb-lumos/base': 0.24.0-next.1
+      '@ckb-lumos/bi': 0.24.0-next.1
+      '@ckb-lumos/codec': 0.24.0-next.1
+      '@ckb-lumos/rpc': 0.24.0-next.1(encoding@0.1.13)
+      '@types/deep-freeze-strict': 1.1.2
+      deep-freeze-strict: 1.1.1
+    transitivePeerDependencies:
+      - encoding
+
+  '@ckb-lumos/crypto@0.24.0-next.1':
+    dependencies:
+      '@noble/ciphers': 0.5.3
+      '@noble/hashes': 1.4.0
+
+  '@ckb-lumos/hd@0.24.0-next.1':
+    dependencies:
+      '@ckb-lumos/base': 0.24.0-next.1
+      '@ckb-lumos/bi': 0.24.0-next.1
+      '@ckb-lumos/codec': 0.24.0-next.1
+      '@ckb-lumos/crypto': 0.24.0-next.1
+      bn.js: 4.12.0
+      elliptic: 6.5.4
+      uuid: 8.3.2
+
   '@ckb-lumos/helpers@0.22.2(encoding@0.1.13)':
     dependencies:
       '@ckb-lumos/base': 0.22.2
@@ -5377,6 +5469,18 @@ snapshots:
       '@ckb-lumos/codec': 0.22.2
       '@ckb-lumos/config-manager': 0.22.2(encoding@0.1.13)
       '@ckb-lumos/toolkit': 0.22.2
+      bech32: 2.0.0
+      immutable: 4.3.5
+    transitivePeerDependencies:
+      - encoding
+
+  '@ckb-lumos/helpers@0.24.0-next.1(encoding@0.1.13)':
+    dependencies:
+      '@ckb-lumos/base': 0.24.0-next.1
+      '@ckb-lumos/bi': 0.24.0-next.1
+      '@ckb-lumos/codec': 0.24.0-next.1
+      '@ckb-lumos/config-manager': 0.24.0-next.1(encoding@0.1.13)
+      '@ckb-lumos/toolkit': 0.24.0-next.1
       bech32: 2.0.0
       immutable: 4.3.5
     transitivePeerDependencies:
@@ -5391,13 +5495,22 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@ckb-lumos/rpc@0.24.0-next.1(encoding@0.1.13)':
+    dependencies:
+      '@ckb-lumos/base': 0.24.0-next.1
+      '@ckb-lumos/bi': 0.24.0-next.1
+      abort-controller: 3.0.0
+      cross-fetch: 3.1.8(encoding@0.1.13)
+    transitivePeerDependencies:
+      - encoding
+
   '@ckb-lumos/toolkit@0.22.2':
     dependencies:
       '@ckb-lumos/bi': 0.22.2
 
-  '@ckb-lumos/toolkit@0.23.0':
+  '@ckb-lumos/toolkit@0.24.0-next.1':
     dependencies:
-      '@ckb-lumos/bi': 0.23.0
+      '@ckb-lumos/bi': 0.24.0-next.1
 
   '@eslint-community/eslint-utils@4.4.0(eslint@8.57.0)':
     dependencies:
@@ -5659,33 +5772,14 @@ snapshots:
       '@types/yargs': 17.0.32
       chalk: 4.1.2
 
-  '@joyid/ckb@0.0.11(encoding@0.1.13)(typescript@5.4.5)':
-    dependencies:
-      '@joyid/common': 0.0.3(typescript@5.4.5)
-      '@nervosnetwork/ckb-sdk-utils': 0.109.1
-      cross-fetch: 4.0.0(encoding@0.1.13)
-      uncrypto: 0.1.3
-    transitivePeerDependencies:
-      - encoding
-      - typescript
-      - zod
-
-  '@joyid/ckb@1.0.0(encoding@0.1.13)(typescript@5.4.5)':
+  '@joyid/ckb@1.0.1(encoding@0.1.13)(typescript@5.4.5)':
     dependencies:
       '@joyid/common': 0.2.0(typescript@5.4.5)
-      '@nervosnetwork/ckb-sdk-utils': 0.109.1
+      '@nervosnetwork/ckb-sdk-utils': 0.109.2
       cross-fetch: 4.0.0(encoding@0.1.13)
       uncrypto: 0.1.3
     transitivePeerDependencies:
       - encoding
-      - typescript
-      - zod
-
-  '@joyid/common@0.0.3(typescript@5.4.5)':
-    dependencies:
-      abitype: 0.8.7(typescript@5.4.5)
-      type-fest: 4.6.0
-    transitivePeerDependencies:
       - typescript
       - zod
 
@@ -5799,15 +5893,15 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.0
 
-  '@nervosnetwork/ckb-sdk-utils@0.109.1':
+  '@nervosnetwork/ckb-sdk-utils@0.109.2':
     dependencies:
-      '@nervosnetwork/ckb-types': 0.109.1
+      '@nervosnetwork/ckb-types': 0.109.2
       bech32: 2.0.0
       elliptic: 6.5.4
       jsbi: 3.1.3
       tslib: 2.3.1
 
-  '@nervosnetwork/ckb-types@0.109.1': {}
+  '@nervosnetwork/ckb-types@0.109.2': {}
 
   '@next/env@14.2.2': {}
 
@@ -5841,6 +5935,8 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@14.2.2':
     optional: true
+
+  '@noble/ciphers@0.5.3': {}
 
   '@noble/curves@1.2.0':
     dependencies:
@@ -7349,8 +7445,8 @@ snapshots:
       '@typescript-eslint/parser': 7.2.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.1(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
@@ -7372,13 +7468,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -7389,18 +7485,18 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.2.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -7410,7 +7506,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -8334,7 +8430,7 @@ snapshots:
   jake@10.8.7:
     dependencies:
       async: 3.2.5
-      chalk: 4.1.0
+      chalk: 4.1.2
       filelist: 1.0.4
       minimatch: 3.1.2
 
@@ -10446,6 +10542,8 @@ snapshots:
       punycode: 2.3.1
 
   util-deprecate@1.0.2: {}
+
+  uuid@8.3.2: {}
 
   uuid@9.0.1: {}
 

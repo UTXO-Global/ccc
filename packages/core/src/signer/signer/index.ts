@@ -5,6 +5,7 @@ import { Client } from "../../client";
 import { Hex } from "../../hex";
 import { Num } from "../../num";
 import { verifyMessageBtcEcdsa } from "../btc";
+import { verifyMessageCkbSecp256k1 } from "../ckb/verifyCkbSecp256k1";
 import { verifyMessageJoyId } from "../ckb/verifyJoyId";
 import { verifyMessageEvmPersonal } from "../evm/verify";
 import { verifyMessageNostrEvent } from "../nostr/verify";
@@ -15,6 +16,7 @@ export enum SignerSignType {
   EvmPersonal = "EvmPersonal",
   JoyId = "JoyId",
   NostrEvent = "NostrEvent",
+  CkbSecp256k1 = "CkbSecp256k1",
 }
 
 /**
@@ -26,6 +28,23 @@ export enum SignerType {
   CKB = "CKB",
   Nostr = "Nostr",
 }
+
+export type NetworkPreference = {
+  addressPrefix: string;
+  signerType: SignerType;
+  network: string;
+  /*
+    Wallet signers should check if the wallet is using preferred networks.
+    If not, try to switch to the first preferred network.
+    If non preferred, let users choose what they want.
+
+    BTC: // They made a mess...
+      btc
+      btcTestnet
+      btcSignet // OKX
+      fractalBtc // UniSat
+  */
+};
 
 export class Signature {
   constructor(
@@ -47,6 +66,27 @@ export abstract class Signer {
 
   get client(): Client {
     return this.client_;
+  }
+
+  // Returns the preference if we need to switch network
+  // undefined otherwise
+  matchNetworkPreference(
+    preferences: NetworkPreference[],
+    currentNetwork: string,
+  ) {
+    if (
+      preferences.some(({ signerType, addressPrefix, network }) => {
+        signerType === this.type &&
+          addressPrefix === this.client.addressPrefix &&
+          network === currentNetwork;
+      })
+    ) {
+      return;
+    }
+    return preferences.find(
+      ({ signerType, addressPrefix }) =>
+        signerType === this.type && addressPrefix === this.client.addressPrefix,
+    );
   }
 
   static async verifyMessage(
@@ -78,18 +118,15 @@ export abstract class Signer {
           signature.signature,
           signature.identity,
         );
+      case SignerSignType.CkbSecp256k1:
+        return verifyMessageCkbSecp256k1(
+          message,
+          signature.signature,
+          signature.identity,
+        );
       case SignerSignType.Unknown:
         throw new Error("Unknown signer sign type");
     }
-  }
-
-  /**
-   * Replace the current client.
-   * returns false if the new client is invalid for this signer.
-   */
-  async replaceClient(client: Client): Promise<boolean> {
-    this.client_ = client;
-    return true;
   }
 
   /**
@@ -98,6 +135,22 @@ export abstract class Signer {
    * @returns A promise that resolves when the connection is complete.
    */
   abstract connect(): Promise<void>;
+
+  /**
+   * Register a listener to be called when this signer is replaced.
+   *
+   * @returns A function for unregister
+   */
+  onReplaced(_: () => void): () => void {
+    return () => {};
+  }
+
+  /**
+   * Disconnects to the signer.
+   *
+   * @returns A promise that resolves when the signer is disconnected.
+   */
+  async disconnect(): Promise<void> {}
 
   /**
    * Check if the signer is connected.
@@ -210,7 +263,11 @@ export abstract class Signer {
     signature: string | Signature,
   ): Promise<boolean> {
     if (typeof signature === "string") {
-      return this.verifyMessageRaw(message, signature);
+      return Signer.verifyMessage(message, {
+        signType: this.signType,
+        signature,
+        identity: await this.getIdentity(),
+      });
     }
 
     if (
@@ -220,19 +277,7 @@ export abstract class Signer {
       return false;
     }
 
-    return this.verifyMessageRaw(message, signature.signature);
-  }
-
-  /**
-   * Verify a string signature. This method is not implemented and should be overridden by subclasses.
-   *
-   * @param _0 - The original message.
-   * @param _1 - The signature to verify.
-   * @returns A promise that resolves to the verification result.
-   * @throws Will throw an error if not implemented.
-   */
-  verifyMessageRaw(_0: string | BytesLike, _1: string): Promise<boolean> {
-    throw Error("Signer.verifyMessageRaw not implemented");
+    return Signer.verifyMessage(message, signature);
   }
 
   /**

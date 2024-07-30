@@ -34,13 +34,14 @@ export enum KnownScript {
   COTA = "COTA",
   OmniLock = "OmniLock",
   NostrLock = "NostrLock",
+  UniqueType = "UniqueType",
   SingleUseLock = "SingleUseLock",
   OutputTypeProxyLock = "OutputTypeProxyLock",
 }
 
 export type CellDepInfoLike = {
   cellDep: CellDepLike;
-  type?: ScriptLike;
+  type?: ScriptLike | null;
 };
 
 export class CellDepInfo {

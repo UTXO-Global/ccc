@@ -1,7 +1,7 @@
 {
   "name": "@ckb-ccc/ccc",
-  "version": "0.0.7-alpha.0",
-  "description": "Common Chains Connector",
+  "version": "0.0.10-alpha.6",
+  "description": "CCC - CKBer's Codebase. Common Chains Connector.",
   "author": "Hanssen0 <hanssen0@hanssen0.com>",
   "license": "MIT",
   "private": false,
@@ -50,6 +50,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@ckb-ccc/utxo-global": "workspace:*",
     "@ckb-ccc/core": "workspace:*",
     "@ckb-ccc/eip6963": "workspace:*",
     "@ckb-ccc/joy-id": "workspace:*",
