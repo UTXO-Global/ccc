@@ -1,5 +1,4 @@
 import { ccc } from "@ckb-ccc/core";
-import { cccA } from "@ckb-ccc/core/advanced";
 import { Provider } from "../advancedBarrel";
 
 export class SignerCkb extends ccc.Signer {
@@ -80,9 +79,7 @@ export class SignerCkb extends ccc.Signer {
   async signOnlyTransaction(
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
-    const rawTx = cccA.JsonRpcTransformers.transactionFrom(txLike);
-    const txSigned = await this.provider.signTransaction(rawTx);
-    return ccc.Transaction.from(JSON.parse(txSigned));
+    return await this.provider.signTransaction(txLike);
   }
 
   async prepareTransaction(
