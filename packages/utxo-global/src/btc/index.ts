@@ -17,8 +17,13 @@ export class SignerBtc extends ccc.SignerBtc {
   async getBtcPublicKey(): Promise<ccc.Hex> {
     const pubKeys = await this.provider.getPublicKey();
     const account = await this.getBtcAccount();
-    const pubKey = pubKeys.find((_pubKey) => _pubKey.address === account);
-    return ccc.hexFrom(pubKey?.publicKey!);
+    const pubKey = pubKeys.find((p) => p.address === account);
+
+    if (pubKey) {
+      return ccc.hexFrom(pubKey.publicKey);
+    }
+
+    throw new Error("pubKey not found");
   }
 
   async connect(): Promise<void> {

@@ -5,7 +5,7 @@ import { SignerCkb } from "./ckb";
 
 export function getUtxoGlobalSigners(
   client: ccc.Client,
-): ccc.SignerInfo[] | undefined {
+): ccc.SignerInfo[] {
   const windowRef = window as {
     utxoGlobal?: {
       bitcoinSigner: Provider;
@@ -14,7 +14,7 @@ export function getUtxoGlobalSigners(
   };
 
   if (typeof windowRef.utxoGlobal === "undefined") {
-    return;
+    return [];
   }
 
   return [

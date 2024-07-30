@@ -134,19 +134,19 @@ export default function Home() {
     () =>
       signer
         ? [
-            ["Sign", Sign],
-            ["Transfer", Transfer],
-            ["Transfer with Lumos", TransferLumos],
-            ["Transfer xUDT", TransferXUdt],
-            ["Issue xUDT (SUS)", IssueXUdtSul],
-            ["Issue xUDT (Type ID)", IssueXUdtTypeId],
-            ["Hash", Hash],
-            ["Mnemonic", Mnemonic],
-          ]
+          ["Sign", Sign],
+          ["Transfer", Transfer],
+          ["Transfer with Lumos", TransferLumos],
+          ["Transfer xUDT", TransferXUdt],
+          ["Issue xUDT (SUS)", IssueXUdtSul],
+          ["Issue xUDT (Type ID)", IssueXUdtTypeId],
+          ["Hash", Hash],
+          ["Mnemonic", Mnemonic],
+        ]
         : [
-            ["Hash", Hash],
-            ["Mnemonic", Mnemonic],
-          ],
+          ["Hash", Hash],
+          ["Mnemonic", Mnemonic],
+        ],
     [signer],
   );
 

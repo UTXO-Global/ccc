@@ -42,7 +42,7 @@ export class SignerCkb extends ccc.Signer {
       return [address];
     }
 
-    throw new Error("Can't get addresses from SignerCkb");
+    throw new Error("address not found");
   }
 
   async getAccount() {
@@ -54,8 +54,9 @@ export class SignerCkb extends ccc.Signer {
     const pubKeys = await this.provider.getPublicKey();
     const account = await this.getAccount();
     const pubKey = pubKeys.find((p) => p.address === account);
+
     if (!pubKey) {
-      throw new Error("Can't get public key from SignerCkb");
+      throw new Error("pubKey not found");
     }
 
     return ccc.hexFrom(pubKey.publicKey);
