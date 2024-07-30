@@ -77,48 +77,12 @@ export class SignerCkb extends ccc.Signer {
     return this.provider.signMessage(challenge, account);
   }
 
-  async signMessage(message: ccc.BytesLike): Promise<ccc.Signature> {
-    return {
-      signature: await this.signMessageRaw(message),
-      identity: await this.getIdentity(),
-      signType: ccc.SignerSignType.CkbSecp256k1,
-    };
-  }
-
-  async verifyMessage(
-    message: string | ccc.BytesLike,
-    signature: string | ccc.Signature,
-  ): Promise<boolean> {
-    if (typeof signature === "string") {
-      return this.verifyMessageRaw(message, signature);
-    }
-
-    if (
-      signature.identity !== (await this.getIdentity()) ||
-      ![this.signType, ccc.SignerSignType.CkbSecp256k1].includes(
-        signature.signType,
-      )
-    ) {
-      return false;
-    }
-
-    return this.verifyMessageRaw(message, signature.signature);
-  }
-
-  async verifyMessageRaw(
-    message: ccc.BytesLike,
-    signature: string | ccc.Signature,
-  ): Promise<boolean> {
-    const pubKey = await this.getPublicKey();
-    return ccc.verifyMessageCkbSecp256k1(message, signature as string, pubKey);
-  }
-
   async signOnlyTransaction(
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
     const rawTx = cccA.JsonRpcTransformers.transactionFrom(txLike);
     const txSigned = await this.provider.signTransaction(rawTx);
-    return JSON.parse(txSigned) as ccc.Transaction;
+    return ccc.Transaction.from(JSON.parse(txSigned));
   }
 
   async prepareTransaction(

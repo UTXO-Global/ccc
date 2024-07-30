@@ -40,12 +40,4 @@ export class SignerBtc extends ccc.SignerBtc {
     const account = await this.getBtcAccount();
     return this.provider.signMessage(challenge, account);
   }
-
-  async signMessage(message: ccc.BytesLike): Promise<ccc.Signature> {
-    return {
-      signature: await this.signMessageRaw(message),
-      identity: await this.getBtcPublicKey(),
-      signType: this.signType,
-    };
-  }
 }

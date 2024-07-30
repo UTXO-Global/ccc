@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center" style="font-size: 64px;">
-  CCC's support for Utxo Global
+  UTXO Global Wallet for Nervos - A New Horizon for Your Crypto Adventures!
 </h1>
 
 <p align="center">
