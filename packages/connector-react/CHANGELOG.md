@@ -1,5 +1,11 @@
 # @ckb-ccc/connector-react
 
+## 0.0.13-alpha.5
+
+### Patch Changes
+
+- [`9e6b9fd`](https://github.com/ckb-ecofund/ccc/commit/9e6b9fd40274015a0964dec8e0ee58dcbc06c786) Thanks [@Hanssen0](https://github.com/Hanssen0)! - fix(connector-react): if the filter is undefined, accept all
+
 ## 0.0.13-alpha.4
 
 ### Patch Changes
