@@ -6,7 +6,6 @@ import { SignerCkb } from "./ckb/index.js";
 /**
  * @public
  */
-const UTXO_GLOBAL_SIGNERS: ccc.SignerInfo[] = [];
 export function getUtxoGlobalSigners(
   client: ccc.Client,
   preferredNetworks?: ccc.NetworkPreference[],
@@ -22,27 +21,18 @@ export function getUtxoGlobalSigners(
     return [];
   }
 
-  if (UTXO_GLOBAL_SIGNERS.length === 0) {
-    UTXO_GLOBAL_SIGNERS.push(
-      ...[
-        {
-          name: "CKB",
-          signer: new SignerCkb(client, windowRef.utxoGlobal.ckbSigner),
-        },
-        {
-          name: "BTC",
-          signer: new SignerBtc(
-            client,
-            windowRef.utxoGlobal.bitcoinSigner,
-            preferredNetworks,
-          ),
-        },
-      ],
-    );
-  }
-
-  return UTXO_GLOBAL_SIGNERS.map((item) => {
-    item.signer.client = client;
-    return item;
-  });
+  return [
+    {
+      name: "CKB",
+      signer: new SignerCkb(client, windowRef.utxoGlobal.ckbSigner),
+    },
+    {
+      name: "BTC",
+      signer: new SignerBtc(
+        client,
+        windowRef.utxoGlobal.bitcoinSigner,
+        preferredNetworks,
+      ),
+    },
+  ];
 }

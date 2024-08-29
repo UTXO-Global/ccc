@@ -110,7 +110,9 @@ export class SignerCkb extends ccc.Signer {
   async signOnlyTransaction(
     txLike: ccc.TransactionLike,
   ): Promise<ccc.Transaction> {
+    console.log("before =>>", txLike);
     const txSigned = await this.provider.signTransaction(txLike);
+    console.log("after", txSigned);
     return ccc.Transaction.from(txSigned);
   }
 
